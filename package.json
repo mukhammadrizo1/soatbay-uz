@@ -12,8 +12,10 @@
     "apps/admin-panel"
   ],
   "scripts": {
-    "build": "npm run build --workspace=@soatbay/backend --workspace=@soatbay/employer-bot --workspace=@soatbay/worker-bot",
-    "build:admin": "npm --prefix apps/admin-panel run build",
+    "build:libs": "tsc -b libs/shared-types/tsconfig.json libs/common/tsconfig.json libs/database/tsconfig.json",
+    "build": "npm run build:libs && npm run build --workspace=@soatbay/backend --workspace=@soatbay/employer-bot --workspace=@soatbay/worker-bot",
+    "build:admin": "npm run build --workspace=@soatbay/admin-panel",
+    "deploy:admin": "wrangler deploy --config apps/admin-panel/wrangler.toml",
     "lint": "nx run-many -t lint",
     "test": "nx run-many -t test",
     "typecheck": "nx run-many -t typecheck",
@@ -33,7 +35,8 @@
     "@types/node": "^22.10.0",
     "nx": "^20.3.0",
     "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0"
+    "tsconfig-paths": "^4.2.0",
+    "wrangler": "^4.19.0"
   },
   "dependencies": {
     "@prisma/client": "^6.2.0",
