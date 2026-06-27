@@ -13,6 +13,7 @@ async function main() {
   const bot = createBot(token);
   // eslint-disable-next-line no-console
   console.log('🤖 Employer bot starting (long polling)...');
+  await bot.api.deleteWebhook({ drop_pending_updates: true });
   await bot.start();
 }
 
