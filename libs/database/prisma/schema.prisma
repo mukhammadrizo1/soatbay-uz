@@ -1,0 +1,296 @@
+// Soatbay / Kaska Uz — Prisma sxema
+// Mijozlar (Employer) va ishchilar (Worker) alohida jadvallarda saqlanadi.
+// Bir Telegram akkaunt ikkala jadvalda ham bo'lishi mumkin.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum JobMeal {
+  ONCE  @map("1 mahal")
+  TWICE @map("2 mahal")
+  NONE  @map("yoq")
+}
+
+enum JobPostStatus {
+  draft
+  pending
+  approved
+  rejected
+  closed
+  inactive
+}
+
+enum ApplicationStatus {
+  pending
+  approved
+  rejected
+  cancelled
+}
+
+enum ApplicationPaymentMethod {
+  vip
+  balance
+  card_check @map("card-check")
+}
+
+enum RequestStatus {
+  pending
+  approved
+  rejected
+  warned
+  blocked
+}
+
+enum BalanceTransactionType {
+  topup
+  fee
+  vip
+  admin_adjust @map("admin-adjust")
+  refund
+}
+
+enum PendingRequestType {
+  post
+  topup
+  registration
+  application
+}
+
+enum AuditActorType {
+  user
+  admin
+  system
+}
+
+enum ComplaintStatus {
+  new
+  in_progress @map("in-progress")
+  resolved
+}
+
+/// Ish beruvchi (mijoz) — e'lon berish boti
+model Employer {
+  id               String    @id @default(uuid())
+  seq              Int?      @unique
+  telegramId       String?   @unique
+  fullName         String
+  phone            String    @unique
+  isVip            Boolean   @default(false)
+  vipExpiresAt     DateTime?
+  isBlocked        Boolean   @default(false)
+  blockReason      String?
+  needsReregistration Boolean @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  jobPosts        JobPost[]
+  pendingRequests PendingRequest[]
+
+  @@index([isBlocked])
+}
+
+/// Ishchi — ishga yozilish boti
+model Worker {
+  id               String    @id @default(uuid())
+  seq              Int?      @unique
+  telegramId       String?   @unique
+  fullName         String
+  phone            String    @unique
+  age              Int?
+  passportPhotoUrl String?
+  balance          Int       @default(0)
+  isVip            Boolean   @default(false)
+  vipExpiresAt     DateTime?
+  isBlocked        Boolean   @default(false)
+  blockReason      String?
+  offerAccepted    Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  applications        Application[]
+  depositRequests     DepositRequest[]
+  vipPurchases        VipPurchase[]
+  balanceTransactions BalanceTransaction[]
+  complaints          Complaint[]
+  pendingRequests     PendingRequest[]
+
+  @@index([isBlocked])
+}
+
+model AdminAccount {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model JobPost {
+  id               String        @id @default(uuid())
+  seq              Int           @unique @default(autoincrement())
+  employer         Employer      @relation(fields: [employerId], references: [id])
+  employerId       String
+  startDate        DateTime
+  startDay         String // "today" | "tomorrow"
+  workersNeeded    Int
+  salaryPerPerson  Int
+  meal             JobMeal
+  startTime        String
+  endTime          String? // null => "ish tugaguncha"
+  address          String
+  locationLat      Float?
+  locationLng      Float?
+  buses            String?
+  description      String
+  contactPhone     String
+  serviceFee       Int?
+  status           JobPostStatus @default(pending)
+  channelMessageId Int?
+  createdByAdmin   Boolean       @default(false)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  applications    Application[]
+  pendingRequests PendingRequest[]
+
+  @@index([employerId])
+  @@index([status])
+  @@index([startDate])
+}
+
+model Application {
+  id                    String                    @id @default(uuid())
+  seq                   Int                       @unique @default(autoincrement())
+  jobPost               JobPost                   @relation(fields: [jobPostId], references: [id])
+  jobPostId             String
+  worker                Worker                    @relation(fields: [workerId], references: [id])
+  workerId              String
+  jobDate               DateTime
+  distanceScreenshotUrl String?
+  paymentMethod         ApplicationPaymentMethod?
+  paymentCheckUrl       String?
+  feeCharged            Int?
+  status                ApplicationStatus         @default(pending)
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+
+  pendingRequests PendingRequest[]
+
+  @@index([jobPostId])
+  @@index([workerId])
+  @@index([jobDate])
+  @@index([status])
+}
+
+model DepositRequest {
+  id            String        @id @default(uuid())
+  seq           Int           @unique @default(autoincrement())
+  worker        Worker        @relation(fields: [workerId], references: [id])
+  workerId      String
+  amount        Int
+  checkPhotoUrl String?
+  status        RequestStatus @default(pending)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([workerId])
+  @@index([status])
+}
+
+model VipPurchase {
+  id        String        @id @default(uuid())
+  seq       Int           @unique @default(autoincrement())
+  worker    Worker        @relation(fields: [workerId], references: [id])
+  workerId  String
+  amount    Int
+  status    RequestStatus @default(pending)
+  createdAt DateTime      @default(now())
+
+  @@index([workerId])
+}
+
+model BalanceTransaction {
+  id           String                 @id @default(uuid())
+  worker       Worker                 @relation(fields: [workerId], references: [id])
+  workerId     String
+  amount       Int // signed: positive = credit, negative = debit
+  type         BalanceTransactionType
+  balanceAfter Int
+  meta         Json?
+  createdAt    DateTime               @default(now())
+
+  @@index([workerId])
+  @@index([type])
+}
+
+model PendingRequest {
+  id            String             @id @default(uuid())
+  seq           Int                @unique @default(autoincrement())
+  type          PendingRequestType
+  status        RequestStatus      @default(pending)
+  employer      Employer?          @relation(fields: [employerId], references: [id])
+  employerId    String?
+  worker        Worker?            @relation(fields: [workerId], references: [id])
+  workerId      String?
+  jobPost       JobPost?           @relation(fields: [jobPostId], references: [id])
+  jobPostId     String?
+  application   Application?       @relation(fields: [applicationId], references: [id])
+  applicationId String?
+  payload       Json
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@index([type, status])
+  @@index([employerId])
+  @@index([workerId])
+}
+
+model Complaint {
+  id          String          @id @default(uuid())
+  seq         Int             @unique @default(autoincrement())
+  worker      Worker          @relation(fields: [workerId], references: [id])
+  workerId    String
+  text        String?
+  attachments Json? // array of file ids / urls
+  status      ComplaintStatus @default(new)
+  adminNote   String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([workerId])
+  @@index([status])
+}
+
+model Settings {
+  id               Int      @id @default(1)
+  cardNumber       String
+  cardHolderName   String
+  vipPrice         Int      @default(300000)
+  vipDurationDays  Int      @default(30)
+  minTopupAmount   Int      @default(20000)
+  feeThresholdLow  Int      @default(150000)
+  feeThresholdHigh Int      @default(250000)
+  feeLow           Int      @default(10000)
+  feeHigh          Int      @default(20000)
+  updatedAt        DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String         @id @default(uuid())
+  actorType AuditActorType
+  actorId   String?
+  action    String
+  entity    String
+  entityId  String?
+  before    Json?
+  after     Json?
+  createdAt DateTime       @default(now())
+
+  @@index([entity, entityId])
+  @@index([actorType, actorId])
+}

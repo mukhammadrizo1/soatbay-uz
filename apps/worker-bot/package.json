@@ -1,0 +1,24 @@
+{
+  "name": "@soatbay/worker-bot",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.app.json",
+    "serve": "ts-node-dev --respawn --transpile-only src/main.ts",
+    "start": "node dist/main.js",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json"
+  },
+  "dependencies": {
+    "@grammyjs/storage-redis": "^2.5.1",
+    "@prisma/client": "^6.2.0",
+    "@soatbay/common": "*",
+    "@soatbay/database": "*",
+    "@soatbay/shared-types": "*",
+    "dotenv": "^16.4.7",
+    "grammy": "^1.31.0",
+    "ioredis": "^5.4.1"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^2.0.0"
+  }
+}

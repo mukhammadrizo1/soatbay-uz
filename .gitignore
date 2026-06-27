@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+build/
+tmp/
+out-tsc/
+*.tsbuildinfo
+
+# Nx
+.nx/cache
+.nx/workspace-data
+
+# Angular
+apps/admin-panel/.angular/
+apps/admin-panel/dist/
+
+# Environment (maxfiy — Git ga yuklanmaydi)
+.env
+.env.example
+.env.local
+.env.*.local
+
+# Prisma
+libs/database/prisma/*.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# Uploads (local file storage)
+uploads/
+storage/
+
+# Coverage
+coverage/
+
+# Ichki hujjatlar (deploy va dev qo'llanmalari)
+DEPLOYMENT.md
+DEPLOYMENT_v2.md
+Telegram_Bot_System_Prompt.md
+SOATBAY_BUILD_PROMPT.md
+TESTING.md
