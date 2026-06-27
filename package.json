@@ -22,7 +22,7 @@
     "db:generate": "prisma generate --schema libs/database/prisma/schema.prisma",
     "db:migrate": "prisma migrate dev --schema libs/database/prisma/schema.prisma",
     "db:deploy": "prisma migrate deploy --schema libs/database/prisma/schema.prisma",
-    "db:seed": "tsx libs/database/src/seed.ts",
+    "db:seed": "npm run build:libs && tsx libs/database/src/seed.ts",
     "db:studio": "prisma studio --schema libs/database/prisma/schema.prisma",
     "start:backend": "npm --prefix apps/backend run serve",
     "start:employer-bot": "nx serve employer-bot",
