@@ -19,7 +19,7 @@ async function bootstrap() {
   app.setGlobalPrefix(prefix);
 
   const corsOrigins = process.env.CORS_ORIGINS?.split(',')
-    .map((o) => o.trim())
+    .map((o) => o.trim().replace(/\/+$/, ''))
     .filter(Boolean);
 
   app.enableCors({
