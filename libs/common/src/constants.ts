@@ -16,6 +16,9 @@ export const BUSINESS_DEFAULTS = {
   FEE_HIGH: 20_000,
   WORKER_MIN_AGE: 18,
   WORKER_MAX_AGE: 65,
+  /** Seed / zaxira — haqiqiy karta admin panel Settings dan o'rnatiladi. */
+  DEFAULT_CARD_NUMBER: '8600 0000 0000 0000',
+  DEFAULT_CARD_HOLDER: 'Karta egasi F.I.O.',
 } as const;
 
 export const CONTACTS = {

@@ -21,9 +21,10 @@ export async function getSettings(): Promise<RuntimeSettings> {
     };
   }
   return {
-    cardNumber: process.env.DEFAULT_CARD_NUMBER ?? '5614 6819 1147 9941',
+    cardNumber:
+      process.env.DEFAULT_CARD_NUMBER ?? BUSINESS_DEFAULTS.DEFAULT_CARD_NUMBER,
     cardHolderName:
-      process.env.DEFAULT_CARD_HOLDER ?? "Raximov Otaboy Ergash o'g'li",
+      process.env.DEFAULT_CARD_HOLDER ?? BUSINESS_DEFAULTS.DEFAULT_CARD_HOLDER,
     vipPrice: BUSINESS_DEFAULTS.VIP_PRICE,
     vipDurationDays: BUSINESS_DEFAULTS.VIP_DURATION_DAYS,
     minTopupAmount: BUSINESS_DEFAULTS.MIN_TOPUP_AMOUNT,

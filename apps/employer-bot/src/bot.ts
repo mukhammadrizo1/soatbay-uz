@@ -1,5 +1,6 @@
 import { Bot, session } from 'grammy';
 import { RedisAdapter } from '@grammyjs/storage-redis';
+import { redisUrlFromEnv } from '@soatbay/common';
 import IORedis from 'ioredis';
 import { prisma } from '@soatbay/database';
 import { JobStartDay } from '@soatbay/shared-types';
@@ -35,7 +36,7 @@ import {
 export function createBot(token: string): Bot<BotContext> {
   const bot = new Bot<BotContext>(token);
 
-  const redis = new IORedis(process.env.REDIS_URL ?? 'redis://localhost:6379');
+  const redis = new IORedis(redisUrlFromEnv());
   const storage = new RedisAdapter<SessionData>({ instance: redis });
   bot.use(
     session({

@@ -12,14 +12,15 @@
     "apps/admin-panel"
   ],
   "scripts": {
-    "build": "nx run-many -t build",
+    "build": "npm --prefix apps/backend run build && npm --prefix apps/employer-bot run build && npm --prefix apps/worker-bot run build",
+    "build:admin": "npm --prefix apps/admin-panel run build",
     "lint": "nx run-many -t lint",
     "test": "nx run-many -t test",
     "typecheck": "nx run-many -t typecheck",
     "db:generate": "prisma generate --schema libs/database/prisma/schema.prisma",
     "db:migrate": "prisma migrate dev --schema libs/database/prisma/schema.prisma",
     "db:deploy": "prisma migrate deploy --schema libs/database/prisma/schema.prisma",
-    "db:seed": "ts-node libs/database/src/seed.ts",
+    "db:seed": "tsx libs/database/src/seed.ts",
     "db:studio": "prisma studio --schema libs/database/prisma/schema.prisma",
     "start:backend": "npm --prefix apps/backend run serve",
     "start:employer-bot": "nx serve employer-bot",
@@ -37,7 +38,9 @@
     "typescript": "~5.5.4"
   },
   "dependencies": {
-    "@prisma/client": "^6.2.0"
+    "@prisma/client": "^6.2.0",
+    "bcryptjs": "^2.4.3",
+    "tsx": "^4.19.2"
   },
   "engines": {
     "node": ">=20"

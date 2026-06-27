@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Settings } from '@prisma/client';
+import { BUSINESS_DEFAULTS } from '@soatbay/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateSettingsDto } from '@soatbay/shared-types';
 
@@ -14,9 +15,10 @@ export class SettingsService {
     return this.prisma.settings.create({
       data: {
         id: 1,
-        cardNumber: process.env.DEFAULT_CARD_NUMBER ?? '5614 6819 1147 9941',
+        cardNumber:
+          process.env.DEFAULT_CARD_NUMBER ?? BUSINESS_DEFAULTS.DEFAULT_CARD_NUMBER,
         cardHolderName:
-          process.env.DEFAULT_CARD_HOLDER ?? "Raximov Otaboy Ergash o'g'li",
+          process.env.DEFAULT_CARD_HOLDER ?? BUSINESS_DEFAULTS.DEFAULT_CARD_HOLDER,
       },
     });
   }

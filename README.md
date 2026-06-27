@@ -149,16 +149,12 @@ ko'rinadi; ularni bosqichma-bosqich Helm komponentlariga almashtiring.
 | `npm run db:deploy` | Migratsiyalarni qo'llash (prod) |
 | `npm run db:seed` | Admin + sozlamalarni seed qilish |
 | `npm run db:studio` | Prisma Studio ni ochish |
-| `npm run build` | Barcha workspace loyihalarini qurish |
+| `npm run build` | Backend + botlar (Render deploy) |
+| `npm run build:admin` | Admin panel (Cloudflare Pages) |
 | `npm run typecheck` | Barcha loyihalarni tip tekshiruvidan o'tkazish |
 
 ## Holat
 
-Bu ishlab chiqarishga tayyor **skelet**: arxitektura, ma'lumotlar bazasi
-sxemasi, barcha bot FSM oqimlari, backend modullari/endpointlari va admin
-sahifalari joyida. Qolgan takomillashtirish ishlari: skrinshot/cheklar uchun
-fayllarni ko'rsatish allaqachon qo'shilgan (Telegram fayl proksisi), tests.
-```
-# soatbay-uz
-# soatbay-uz
-# soatbay-uz
+Bu ishlab chiqarishga tayyor platforma: arxitektura, ma'lumotlar bazasi
+sxemasi, bot FSM oqimlari, backend API va admin panel. Deploy uchun
+`DEPLOYMENT_v2.md` (Render) yoki `DEPLOYMENT.md` (Oracle VM) qo'llanmalariga qarang.
