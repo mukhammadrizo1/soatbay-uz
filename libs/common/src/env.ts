@@ -14,7 +14,7 @@ export function assertProductionEnv(required: string[]): void {
   const jwt = process.env.JWT_SECRET?.trim() ?? '';
   if (jwt.length < 32 || INSECURE_JWT.has(jwt)) {
     throw new Error(
-      'Production uchun JWT_SECRET kamida 32 belgili tasodifiy satr bo\'lishi kerak.',
+      `Production uchun JWT_SECRET kamida 32 belgili tasodifiy satr bo'lishi kerak (hozir: ${jwt.length} belgi). Render → Environment da yangilang.`,
     );
   }
 

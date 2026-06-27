@@ -1,5 +1,6 @@
 export * from './constants';
 export * from './env';
+export * from './redis';
 export * from './validators';
 export * from './formatters';
 export * from './messages';

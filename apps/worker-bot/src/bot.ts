@@ -1,7 +1,6 @@
 import { Bot, session } from 'grammy';
 import { RedisAdapter } from '@grammyjs/storage-redis';
-import { redisUrlFromEnv } from '@soatbay/common';
-import IORedis from 'ioredis';
+import { createRedisClient } from '@soatbay/common';
 import { prisma } from '@soatbay/database';
 import { MSG } from '@soatbay/common';
 import { BotContext, initialSession, SessionData, Step } from './session';
@@ -39,7 +38,7 @@ import {
 export function createBot(token: string): Bot<BotContext> {
   const bot = new Bot<BotContext>(token);
 
-  const redis = new IORedis(redisUrlFromEnv());
+  const redis = createRedisClient();
   const storage = new RedisAdapter<SessionData>({ instance: redis });
   bot.use(session({ initial: initialSession, storage }));
 
