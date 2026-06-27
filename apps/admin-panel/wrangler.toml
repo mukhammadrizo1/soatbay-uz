@@ -1,8 +1,9 @@
 # Cloudflare Workers Builds (static admin panel)
-# Deploy: npx wrangler deploy --config apps/admin-panel/wrangler.toml
+# Deploy: npm run deploy:admin
 
-name = "soatbay-admin"
+name = "soatbay-uz"
 compatibility_date = "2026-01-01"
 
 [assets]
 directory = "./dist/admin-panel/browser"
+not_found_handling = "single-page-application"
