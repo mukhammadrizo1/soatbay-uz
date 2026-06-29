@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { DateRangeComponent } from '../shared/date-range.component';
 import { ApiService } from '../core/api.service';
 
 interface Stats {
@@ -21,15 +22,66 @@ interface Stats {
   trend: { date: string; applications: number; posts: number }[];
 }
 
+interface ProfitReport {
+  from: string;
+  to: string;
+  applicationFees: number;
+  approvedApplications: number;
+  vipSales: number;
+  vipPurchases: number;
+  refunds: number;
+  refundCount: number;
+  totalProfit: number;
+}
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
+  imports: [DateRangeComponent],
   template: `
     <h1 class="mb-4 text-2xl font-bold">Dashboard</h1>
     @if (stats(); as s) {
       <div class="mb-4 rounded-xl bg-gradient-to-r from-brand to-brand-dark p-6 text-white shadow">
         <div class="text-sm opacity-80">Tizimdagi jami balans</div>
         <div class="text-4xl font-bold">{{ s.totalBalance }} so'm</div>
+      </div>
+
+      <div class="card mb-6">
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-lg font-semibold">Foyda hisoboti</h2>
+          <div class="flex flex-wrap items-end gap-2">
+            <button class="btn-outline" (click)="loadProfitToday()">Bugun</button>
+            <app-date-range (rangeChange)="onProfitRange($event)" />
+          </div>
+        </div>
+        @if (profit(); as p) {
+          <div class="mb-3 text-sm text-slate-500">
+            Davr: {{ p.from === p.to ? p.from : p.from + ' — ' + p.to }}
+          </div>
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+              <div class="text-sm text-emerald-700">Jami foyda</div>
+              <div class="text-2xl font-bold text-emerald-900">{{ p.totalProfit }} so'm</div>
+            </div>
+            <div class="rounded-lg border border-slate-200 p-4">
+              <div class="text-sm text-slate-500">Xizmat haqlari</div>
+              <div class="text-xl font-bold">{{ p.applicationFees }} so'm</div>
+              <div class="text-xs text-slate-400">{{ p.approvedApplications }} ta ariza</div>
+            </div>
+            <div class="rounded-lg border border-slate-200 p-4">
+              <div class="text-sm text-slate-500">VIP sotuvlar</div>
+              <div class="text-xl font-bold">{{ p.vipSales }} so'm</div>
+              <div class="text-xs text-slate-400">{{ p.vipPurchases }} ta xarid</div>
+            </div>
+            <div class="rounded-lg border border-slate-200 p-4">
+              <div class="text-sm text-slate-500">Qaytarilgan</div>
+              <div class="text-xl font-bold text-red-600">−{{ p.refunds }} so'm</div>
+              <div class="text-xs text-slate-400">{{ p.refundCount }} ta qaytarish</div>
+            </div>
+          </div>
+        } @else {
+          <p class="text-slate-400">Foyda hisoboti yuklanmoqda...</p>
+        }
       </div>
 
       <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -71,9 +123,28 @@ interface Stats {
 export class DashboardComponent implements OnInit {
   private api = inject(ApiService);
   stats = signal<Stats | null>(null);
+  profit = signal<ProfitReport | null>(null);
 
   ngOnInit() {
     this.api.get<Stats>('dashboard/stats').subscribe((s) => this.stats.set(s));
+    this.loadProfitToday();
+  }
+
+  loadProfitToday() {
+    const today = new Date().toISOString().slice(0, 10);
+    this.api.get<ProfitReport>('dashboard/profit', { date: today }).subscribe((p) => {
+      this.profit.set(p);
+    });
+  }
+
+  onProfitRange(r: { from: string; to: string }) {
+    if (!r.from && !r.to) {
+      this.loadProfitToday();
+      return;
+    }
+    this.api
+      .get<ProfitReport>('dashboard/profit', { from: r.from, to: r.to })
+      .subscribe((p) => this.profit.set(p));
   }
 
   barHeight(value: number, s: Stats): number {

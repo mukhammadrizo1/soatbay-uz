@@ -93,7 +93,20 @@ export interface PaginationQuery {
   search?: string;
   from?: string;
   to?: string;
+  date?: string;
   status?: string;
+}
+
+export interface ProfitReportDto {
+  from: string;
+  to: string;
+  applicationFees: number;
+  approvedApplications: number;
+  vipSales: number;
+  vipPurchases: number;
+  refunds: number;
+  refundCount: number;
+  totalProfit: number;
 }
 
 export interface UpdateComplaintStatusDto {

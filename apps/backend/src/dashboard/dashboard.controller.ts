@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { DashboardService } from './dashboard.service';
 
@@ -10,5 +10,10 @@ export class DashboardController {
   @Get('stats')
   stats() {
     return this.dashboard.stats();
+  }
+
+  @Get('profit')
+  profit(@Query() q: { from?: string; to?: string; date?: string }) {
+    return this.dashboard.profit(q);
   }
 }

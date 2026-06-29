@@ -15,6 +15,7 @@ import {
   onRegConfirm,
   onRegReenter,
 } from './flows/onboarding';
+import { handleUnexpectedInput } from './flows/guard';
 import {
   handleDistancePhoto,
   handlePaymentCheckPhoto,
@@ -120,9 +121,11 @@ export function createBot(token: string): Bot<BotContext> {
     if (await handlePaymentCheckPhoto(ctx)) return;
     if (await handleTopupPhoto(ctx)) return;
     if (await handleComplaint(ctx)) return;
+    if (await handleUnexpectedInput(ctx)) return;
   });
 
   bot.on('message:document', async (ctx) => {
+    if (await handleUnexpectedInput(ctx)) return;
     if (await handleComplaint(ctx)) return;
   });
 
@@ -130,6 +133,8 @@ export function createBot(token: string): Bot<BotContext> {
     if (await handleRegistrationText(ctx)) return;
     if (await handleChangePhone(ctx)) return;
     if (await handleComplaint(ctx)) return;
+    if (await handleUnexpectedInput(ctx)) return;
+    if (ctx.session.step !== Step.IDLE) return;
     await ctx.reply('🏠 Asosiy menyu', { reply_markup: mainMenuKeyboard() });
   });
 

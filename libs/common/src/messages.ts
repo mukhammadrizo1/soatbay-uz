@@ -149,6 +149,7 @@ Soxta, noto'g'ri yoki chalg'ituvchi ma'lumot bilan e'lon bersangiz adminlar hiso
   worker: {
     offerRejected:
       "❌ Siz ofertani qabul qilmaganingiz uchun botdan foydalana olmaysiz.\nAgar fikringiz o'zgarsa, qaytadan ofertani qabul qilishingiz mumkin.",
+    offerUseButtons: 'Iltimos oferta tugmalaridan foydalaning: Qabul qilish yoki Rad etish.',
     offerAccept: 'Qabul qilish',
     offerReject: 'Rad etish',
     offerRestart: 'Qaytadan boshlash',
@@ -156,6 +157,8 @@ Soxta, noto'g'ri yoki chalg'ituvchi ma'lumot bilan e'lon bersangiz adminlar hiso
     invalidAge: "❌ Yosh 18 dan 65 gacha bo'lishi kerak.",
     askPassport: '📸 Pasport rasmingizni yuboring:',
     invalidPassport: '❌ Iltimos pasport rasmini surat ko\'rinishida yuboring.',
+    regUseButtons:
+      'Iltimos pastdagi tugmalardan foydalaning: ✅ Tasdiqlash yoki 🔄 Qayta kiritish.',
     confirmData: 'Tasdiqlayman',
     reenterData: "Yo'q, qayta kiritaman",
     registrationSentToAdmin:
