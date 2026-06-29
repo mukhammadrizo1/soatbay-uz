@@ -45,8 +45,8 @@ interface Client {
           @for (c of data()?.items; track c.id) {
             <tr>
               <td class="font-mono">#{{ c.seq }}</td>
-              <td class="cell-truncate" [title]="c.fullName">{{ c.fullName }}</td>
-              <td class="cell-truncate" [title]="c.phone">{{ c.phone }}</td>
+              <td>{{ c.fullName }}</td>
+              <td>{{ c.phone }}</td>
               <td>
                 <span class="badge" [class]="c.isBlocked ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'">
                   {{ c.isBlocked ? 'Bloklangan' : 'Faol' }}

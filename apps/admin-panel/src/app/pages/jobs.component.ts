@@ -62,8 +62,8 @@ interface Job {
           @for (j of data()?.items; track j.id) {
             <tr>
               <td class="font-mono">#{{ j.seq }}</td>
-              <td class="cell-truncate" [title]="j.employer.fullName">{{ j.employer.fullName }}</td>
-              <td class="cell-truncate-md" [title]="j.address">{{ j.address }}</td>
+              <td>{{ j.employer.fullName }}</td>
+              <td>{{ j.address }}</td>
               <td>{{ j.salaryPerPerson }} so'm</td>
               <td>{{ j.workersNeeded }}</td>
               <td>{{ j._count.applications }}</td>

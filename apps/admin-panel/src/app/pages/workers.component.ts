@@ -47,8 +47,8 @@ interface Worker {
           @for (w of data()?.items; track w.id) {
             <tr>
               <td class="font-mono">#{{ w.seq }}</td>
-              <td class="cell-truncate" [title]="w.fullName">{{ w.fullName }}</td>
-              <td class="cell-truncate" [title]="w.phone">{{ w.phone }}</td>
+              <td>{{ w.fullName }}</td>
+              <td>{{ w.phone }}</td>
               <td>{{ w.age ?? '-' }}</td>
               <td>{{ w.balance }} so'm</td>
               <td>{{ w.isVip ? '✅' : '—' }}</td>
