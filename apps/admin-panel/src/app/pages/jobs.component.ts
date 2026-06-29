@@ -78,6 +78,8 @@ interface Job {
     <app-pagination
       [page]="data()?.page ?? 1"
       [totalPages]="data()?.totalPages ?? 1"
+      [total]="data()?.total ?? 0"
+      [pageSize]="data()?.pageSize ?? 0"
       (pageChange)="load($event)"
     />
   `,
@@ -102,12 +104,14 @@ export class JobsComponent implements OnInit {
 
   load(page = 1) {
     this.api
-      .get<Paginated<Job>>('jobs', {
-        status: this.status,
-        from: this.from,
-        to: this.to,
-        page,
-      })
+      .get<Paginated<Job>>(
+        'jobs',
+        this.api.listQuery(page, {
+          status: this.status,
+          from: this.from,
+          to: this.to,
+        }),
+      )
       .subscribe((d) => this.data.set(d));
   }
 }

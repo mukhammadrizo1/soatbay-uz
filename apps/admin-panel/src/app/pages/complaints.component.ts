@@ -80,6 +80,8 @@ interface Complaint {
     <app-pagination
       [page]="data()?.page ?? 1"
       [totalPages]="data()?.totalPages ?? 1"
+      [total]="data()?.total ?? 0"
+      [pageSize]="data()?.pageSize ?? 0"
       (pageChange)="load($event)"
     />
 
@@ -116,7 +118,7 @@ export class ComplaintsComponent implements OnInit {
 
   load(page = 1) {
     this.api
-      .get<Paginated<Complaint>>('complaints', { status: this.status, page })
+      .get<Paginated<Complaint>>('complaints', this.api.listQuery(page, { status: this.status }))
       .subscribe((d) => this.data.set(d));
   }
 

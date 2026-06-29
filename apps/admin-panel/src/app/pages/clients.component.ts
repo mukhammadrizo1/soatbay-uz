@@ -64,6 +64,8 @@ interface Client {
     <app-pagination
       [page]="data()?.page ?? 1"
       [totalPages]="data()?.totalPages ?? 1"
+      [total]="data()?.total ?? 0"
+      [pageSize]="data()?.pageSize ?? 0"
       (pageChange)="load($event)"
     />
   `,
@@ -79,7 +81,7 @@ export class ClientsComponent implements OnInit {
 
   load(page = 1) {
     this.api
-      .get<Paginated<Client>>('clients', { search: this.search, page })
+      .get<Paginated<Client>>('clients', this.api.listQuery(page, { search: this.search }))
       .subscribe((d) => this.data.set(d));
   }
 }
