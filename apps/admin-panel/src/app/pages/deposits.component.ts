@@ -37,8 +37,8 @@ interface Deposit {
           @for (d of data()?.items; track d.id) {
             <tr>
               <td class="font-mono">#{{ d.seq }}</td>
-              <td>{{ d.worker.fullName }}</td>
-              <td>{{ d.worker.phone }}</td>
+              <td class="cell-truncate" [title]="d.worker.fullName">{{ d.worker.fullName }}</td>
+              <td class="cell-truncate" [title]="d.worker.phone">{{ d.worker.phone }}</td>
               <td>{{ d.amount }} so'm</td>
               <td>{{ statusLabel(d.status) }}</td>
               <td>{{ d.createdAt | date: 'short' }}</td>

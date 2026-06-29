@@ -49,10 +49,10 @@ interface ClientLite {
           @for (a of data()?.items; track a.id) {
             <tr>
               <td class="font-mono">#{{ a.seq }}</td>
-              <td>{{ a.worker.fullName }}</td>
-              <td>{{ a.worker.phone }}</td>
+              <td class="cell-truncate" [title]="a.worker.fullName">{{ a.worker.fullName }}</td>
+              <td class="cell-truncate" [title]="a.worker.phone">{{ a.worker.phone }}</td>
               <td>#{{ a.jobPost.seq }}</td>
-              <td>{{ a.jobPost.address }}</td>
+              <td class="cell-truncate-md" [title]="a.jobPost.address">{{ a.jobPost.address }}</td>
               <td>{{ statusLabel(a.status) }}</td>
               <td>{{ a.jobDate | date: 'shortDate' }}</td>
               <td>
