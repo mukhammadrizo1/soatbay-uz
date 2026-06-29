@@ -4,8 +4,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-export const DEFAULT_PAGE_SIZE = 25;
-
 export interface Paginated<T> {
   items: T[];
   total: number;
@@ -30,10 +28,6 @@ export class ApiService {
       }
     }
     return params;
-  }
-
-  listQuery(page: number, extra?: Record<string, unknown>): Record<string, unknown> {
-    return { page, pageSize: DEFAULT_PAGE_SIZE, ...extra };
   }
 
   get<T>(path: string, query?: Record<string, unknown>): Observable<T> {

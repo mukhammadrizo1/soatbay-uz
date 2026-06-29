@@ -138,8 +138,6 @@ interface ModalState {
     <app-pagination
       [page]="data()?.page ?? 1"
       [totalPages]="data()?.totalPages ?? 1"
-      [total]="data()?.total ?? 0"
-      [pageSize]="data()?.pageSize ?? 0"
       (pageChange)="load($event)"
     />
 
@@ -362,7 +360,7 @@ export class PendingComponent implements OnInit {
 
   load(page = 1) {
     this.api
-      .get<Paginated<PendingItem>>(`pending/${this.tab()}`, this.api.listQuery(page))
+      .get<Paginated<PendingItem>>(`pending/${this.tab()}`, { page })
       .subscribe((d) => this.data.set(d));
   }
 
